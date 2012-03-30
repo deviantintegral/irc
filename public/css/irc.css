@@ -16,11 +16,11 @@ body {
 
 	margin:0;
 }
-#rocket { margin-left: auto;   margin-right: auto;   width: 8em;top:30px;}
+#rocket { margin-left: auto;   margin-right: auto;  width: 8em; top: 30px;}
 #rocket img {
 	height:150px;
 	padding-top: 3px;
-	margin-left: -10px;
+	margin:  0 auto;
 }
 .rocket {
 	margin-left: auto;   margin-right: auto;   width: 100%;top:30px;
@@ -51,7 +51,7 @@ body {
 	font-size: 13px;
 	line-height: 18px;
 	color: #333;
-	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	text-shadow: none;
 	vertical-align: middle;
 	background-color: whiteSmoke;
 	background-repeat: repeat-x;
@@ -114,8 +114,8 @@ a {
 	padding-top:2em;
 }
 .header {
-	background: white !important;
-	border-bottom: 1px solid #FFD720;
+	background: #f1f8fe !important;
+	border-bottom: 1px solid #bfddf0;
 	padding-left: 20px;
 	font-weight: bold;
 	width:100% !important;
@@ -157,8 +157,8 @@ a {
 	right: 0;
 	top: 37px;
 	width: 150px;
-	background-color: #444;
-	border-left: 3px solid #FFD720;
+	background-color: #858585;
+	border-left: 3px solid #bfddf0;
 	box-shadow: -2px 0 #ccc;
 	color: white;
 	margin-bottom: 10px;
@@ -194,7 +194,7 @@ a {
 	width: 100px;
 }
 #chat_body .msg {
-	background: #ccc;
+	background: #f0f0f0;
 	height:22px;
 	padding: 2px 6px;
 }
@@ -202,7 +202,7 @@ a {
 	font-style: italic;
 }
 .me > .msg {
-	background: #444 !important;
+	background: #858585 !important;
 	color:#fff;
 }
 .me > .author{

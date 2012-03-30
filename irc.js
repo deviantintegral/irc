@@ -1,7 +1,7 @@
 /***************************************\
           IRC#nodester client
 \***************************************/
- 
+
 /*
  * @name       : irc.js
  * @mainteiner : Alejandro Morales <vamg008@gmail.com>
@@ -16,7 +16,7 @@ var http    = require('http')
   , io      = require('socket.io')
   , express = require('express')
   , ircjs   = require('irc-js')
-  , cfg     = { channel:'#nodester' }
+  , cfg     = { channel:'#lullabuddies' }
   , app     = express.createServer()
   , io      = require('socket.io').listen(app);
 
@@ -41,9 +41,9 @@ app.get('/', function(req, res, next){
   res.render('./public/index.html');
 });
 
-app.listen(process.env.C9_PORT || process.env['app_port'] || 80);
+app.listen(8080);
 
-console.log('IRC#nodester is running on %d',app.address().port)
+// console.log('IRC#lullabuddies is running on %d',app.address().port)
 
 /*
  * Sockets stuff
@@ -66,15 +66,15 @@ io.sockets.on('connection', function (client) {
             username: nickname,
             hostname: 'irc.nodester.com',
             servername: 'irc.freenode.net',
-            realname: nickname + ' via http://irc.nodester.com/'
+            realname: nickname + ' via http://chat.lullabot.com/'
           }
         });
-        
+
         console.log(irc)
         irc.connect(function () {
           irc.join(cfg.channel);
         });
-        
+
         irc.addListener('privmsg', function (message) {
           if (message.params[0] == cfg.channel) {
             client.send(JSON.stringify({
@@ -84,10 +84,10 @@ io.sockets.on('connection', function (client) {
               message: (message.params[1])
             }));
           } else {
-            irc.privmsg(message.person.nick, "I can only talk in #nodester.");
+            irc.privmsg(message.person.nick, "I can only talk in #lullabuddies.");
           }
         });
-        
+
         irc.addListener('join', function (message) {
           client.send(JSON.stringify({
             messagetype: "join",
@@ -95,7 +95,7 @@ io.sockets.on('connection', function (client) {
             channel: (message.params[0])
           }));
         });
-        
+
         //topic 332
         irc.addListener('332', function (raw) {
           client.send(JSON.stringify({
@@ -108,7 +108,7 @@ io.sockets.on('connection', function (client) {
             message: (raw.params[2])
           }));
         });
-        
+
         //names list incoming 353
         irc.addListener('353', function (raw) {
           client.send(JSON.stringify({
@@ -122,7 +122,7 @@ io.sockets.on('connection', function (client) {
             users: (raw.params[3].split(" "))
           }));
         });
-        
+
         //end of names list 366
         irc.addListener('366', function (raw) {
           client.send(JSON.stringify({
@@ -185,7 +185,7 @@ io.sockets.on('connection', function (client) {
               from: (raw.server)
             }));
         });
-        
+
         //welcome from ircserver
         irc.addListener('001', function (raw) {
             client.send(JSON.stringify({
@@ -203,7 +203,7 @@ io.sockets.on('connection', function (client) {
  * NOTICE
  * Must handle some quirks of the implementation of irc client protocol by irc-js
  * Will probably switch to raw.
- * 
+ *
 */
         irc.addListener('notice', function (message) {
           if (message.person !== undefined) {
@@ -224,7 +224,7 @@ io.sockets.on('connection', function (client) {
             }));
           }
         });
-        
+
         irc.addListener('error', function () {console.log(arguments)});
       } else {
         // Maybe handle updating of nicks one day :)
@@ -247,5 +247,5 @@ io.sockets.on('connection', function (client) {
       irc = null;
     }
   });
-  
+
 });
