@@ -1,7 +1,7 @@
 /***************************************\
           IRC#nodester client
 \***************************************/
- 
+
 /*
  * @name       : irc.js
  * @mainteiner : Alejandro Morales <vamg008@gmail.com>
@@ -9,9 +9,9 @@
  * @updated    : 17-03-2012
  * @repo       : http://github.com/nodester/irc
  * @version    : 2.0.0
- * 
+ *
  * @note       : Currently there is no implementation for IRC commands.
- *             : This choice is by design. 
+ *             : This choice is by design.
 */
 
 var http    = require('http')
@@ -19,7 +19,7 @@ var http    = require('http')
   , io      = require('socket.io')
   , express = require('express')
   , ircjs   = require('irc-js')
-  , cfg     = { channel:'#nodester' }
+  , cfg     = { channel:'#lullabuddies' }
   , app     = express.createServer()
   , io      = require('socket.io').listen(app);
 
@@ -67,9 +67,9 @@ app.get('/', function(req, res, next){
   res.render('./public/index.html');
 });
 
-app.listen(process.env.C9_PORT || process.env['app_port'] || 80);
+app.listen(8080);
 
-console.log('IRC#nodester is running on %d',app.address().port)
+// console.log('IRC#lullabuddies is running on %d',app.address().port)
 
 /*
  * Sockets stuff
@@ -92,11 +92,11 @@ io.sockets.on('connection', function (client) {
             username: nickname,
             hostname: 'irc.nodester.com',
             servername: 'irc.freenode.net',
-            realname: nickname + ' via http://irc.nodester.com/'
+            realname: nickname + ' via http://chat.lullabot.com/'
           },
           log: false
         });
-        
+
         console.log(irc)
 
         /*
@@ -107,7 +107,7 @@ io.sockets.on('connection', function (client) {
         irc.connect(function () {
           irc.join(cfg.channel);
         });
-        
+
         /*
          * Handler for private messages
          * There is no private messaging using the web client.
@@ -124,10 +124,10 @@ io.sockets.on('connection', function (client) {
             }));
           } else {
             irc.privmsg(message.person.nick,
-              "Automatic: I am using a web client. I can only talk on channel #nodester.");
+              "Automatic: I am using a web client. I can only talk on channel #lullabuddies.");
           }
         });
-        
+
         /*
          * Handler for join
          */
@@ -138,7 +138,7 @@ io.sockets.on('connection', function (client) {
             channel: (message.params[0])
           }));
         });
-        
+
         /*
          * Handler for the topic, 332
          */
@@ -153,7 +153,7 @@ io.sockets.on('connection', function (client) {
             message: (raw.params[2])
           }));
         });
-        
+
         /*
          * Handler for names.
          * There can be multiple such calls as the names are retrieved, 353
@@ -170,7 +170,7 @@ io.sockets.on('connection', function (client) {
             users: (raw.params[3].split(" "))
           }));
         });
-        
+
         /*
          * Handler for end of names list, 366
          */
@@ -234,7 +234,7 @@ io.sockets.on('connection', function (client) {
             from: (raw.server)
           }));
         });
-        
+
         /*
          * Handler for the welcome message
          * This indicates that the irc server accepted our request, and while there
@@ -254,7 +254,7 @@ io.sockets.on('connection', function (client) {
             message: (raw.params[1])
           }));
         });
-        
+
         /*
          * Handler for notices
          */
@@ -277,7 +277,7 @@ io.sockets.on('connection', function (client) {
             }));
           }
         });
-        
+
         /*
          * Handler for irc error 433: nick already in use.
          * We use this particular handler for the login screen
@@ -317,7 +317,7 @@ io.sockets.on('connection', function (client) {
          * e.g., timeout
          */
         irc.addListener('error', function () {
-          client.send(JSON.stringify({ 
+          client.send(JSON.stringify({
             messagetype: "error"
           }));
         });
