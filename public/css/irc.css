@@ -86,12 +86,12 @@ a {
 	color: #fff;
 }
 .btn-settings {
-    margin-top: 2px;
+    margin-top: 5px;
     position: absolute;
     right: 30px;
 }
 #nickLabel {
-    margin-top: 7px;
+    margin-top: 11px;
     position: absolute;
     right: 160px;
     text-align: right;
@@ -245,6 +245,6 @@ a {
 	clear: both;
 	height: 2em;
 }
-.gold {background-color:#FFD700 !important;}
+.gold {background-color: #fc7f07 !important;}
 .me .time {color:#ccc !important;}
 .off {display: none;}
