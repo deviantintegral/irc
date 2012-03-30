@@ -18,8 +18,7 @@ body {
 }
 #lullabot { margin-left: auto;   margin-right: auto;  width: 8em; top: 30px;}
 #lullabot img {
-	height:150px;
-	padding-top: 3px;
+	padding: 3px;
 	margin:  0 auto;
 }
 .lullabot {
