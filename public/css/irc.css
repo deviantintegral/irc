@@ -86,7 +86,11 @@ a {
 	color: #fff;
 }
 .btn-settings {
+<<<<<<< HEAD
     margin-top: 3px;
+=======
+    margin-top: 5px;
+>>>>>>> Small adjustments to positioning and colors
     position: absolute;
 }
 .tones {
@@ -97,7 +101,7 @@ a {
 }
 
 #nickLabel {
-    margin-top: 7px;
+    margin-top: 11px;
     position: absolute;
     right: 270px;
     text-align: right;
@@ -271,6 +275,6 @@ a {
 	clear: both;
 	height: 2em;
 }
-.gold {background-color:#FFD700 !important;}
+.gold {background-color: #fc7f07 !important;}
 .me .time {color:#ccc !important;}
 .off {display: none;}
