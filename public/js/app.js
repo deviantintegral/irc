@@ -16,7 +16,7 @@ $(document).ready(function(){
     var doNotReconnect = false; //prohibit reconnect to nodester server after a socket disconnect, no retries
     window.counter = 0;
     $('#nick').focus();
-    
+
     var Container = function() {
         var bIrcNoticesEnabled = false; //allow display of "notice" messages during login, default false
         var bAutoScrollEnabled = true; //allow chat page scroll, default true
@@ -40,21 +40,21 @@ $(document).ready(function(){
         this.getOpts = function() {
             return opts;
         };
-        
+
         this.setIrcNoticesEnabled = function(enabled) {
             bIrcNoticesEnabled = enabled;
         };
         this.getIrcNoticesEnabled = function() {
             return bIrcNoticesEnabled;
         };
-        
+
         this.setAutoScrollEnabled = function(enabled) {
             bAutoScrollEnabled = enabled;
         };
         this.getAutoScrollEnabled = function() {
             return bAutoScrollEnabled;
         };
-        
+
         this.setTonesEnables = function(enabled) {
             bTonesEnabled = enabled;
         }
@@ -87,18 +87,18 @@ $(document).ready(function(){
             $('#wrong').removeClass('off');
         }
     });
-    
+
     window.onfocus = function(){
         Tinycon.setBubble(0);
         window.counter = 0;
     };
-    
+
     var getNickname = function (name) {
         var name = name || window.nick || 'Guest' + Math.round(Math.random(0,10)*25);
         nickname = name;
         return name;
     };
-    
+
     var appendMessage = function (from, message, isSelf) {
         var row = $('<tr/>');
         if (typeof isSelf !== 'undefined' && isSelf === true) {
@@ -106,7 +106,7 @@ $(document).ready(function(){
         } else {
             row.addClass('btn');
         }
-        
+
         var row_class = '';
         if (window.nick){
             var reg = window.nick.replace(/\s+/, "|");
@@ -121,7 +121,7 @@ $(document).ready(function(){
                 row_class='default';
             }
         }
-        
+
         message = _.escapeHTML(message);
         message = giveMeColors(message);
         message = message.replace(/(https?:\/\/[-_.a-zA-Z0-9&?\/=\[\]()$!#+:]+)/g, "<a href=\"$1\" target=\"_BLANK\">$1</a>");
@@ -140,9 +140,9 @@ $(document).ready(function(){
         } else {
             row.addClass('btn');
         }
-        
+
         var message = '';
-        
+
         switch (event) {
         case "join":
             message = "<strong>joined the channel</strong>";
@@ -166,7 +166,7 @@ $(document).ready(function(){
             message = "<u>unknown event type oO</u>";
             break;
         }
-        
+
         row.html(
             '<th class="author">' + from + '</th>'
             + '<td class="msg">' + message + '<span class="time">'
@@ -196,7 +196,7 @@ $(document).ready(function(){
             scrollBody();
         }
     };
-    
+
     var nicksToList = function () {
         var content = "";
         for (var i = 0; i < nicks.length; i++) {
@@ -218,17 +218,17 @@ $(document).ready(function(){
                     $('#login-msg').addClass('off');
                     $('#wrong').text("");
                     $('#wrong').removeClass('off');
-                    $('#wrong').text(obj.message);   
+                    $('#wrong').text(obj.message);
                     return;
                 //notice at login
                 case "notice":
-                //notice for content    
+                //notice for content
                 case "notice-msg":
                     if (c.getIrcNoticesEnabled() == true) {
                         appendMessage(obj.from, obj.message, false);
                     } else {
                         //redirect to login screen
-                        loginStatus.text(obj.message); 
+                        loginStatus.text(obj.message);
                     }
                     break;
                 case "message":
@@ -298,7 +298,7 @@ $(document).ready(function(){
             console.log(data);
         }
     };
-    
+
     var handleConnect = function() {
         //cancel reconnect
         if (doNotReconnect == true) {
@@ -312,10 +312,10 @@ $(document).ready(function(){
         window.target = document.getElementById('join-form');
         window.spinner = new Spinner(c.getOpts()).spin(window.target);
     };
-    
+
     /*
      * set a time delay for disconnect
-     * 
+     *
      * in case we exit the form we do not want the user to see it
      * the socket has a reconnect timeout that does not help us with irc here
      * so we make sure the socket won't reconnect: doNotReconnect = true
@@ -413,28 +413,28 @@ $(document).ready(function(){
         }
         return old.replace(/\[[0-9]m|\[|[0-9][0-9]m|/g,'');
     };
-    
+
     /*
      * case insensitive compare
      * will not remove attributes like +, @ before comparison
      */
-    var cisort = function(x, y){ 
-        var a = x.toUpperCase(); 
-        var b = y.toUpperCase(); 
+    var cisort = function(x, y){
+        var a = x.toUpperCase();
+        var b = y.toUpperCase();
         if (a > b) {
-            return 1; 
+            return 1;
         } else if (a < b) {
             return -1;
         } else {
-            return 0; 
+            return 0;
         }
     };
-    
+
     //to resize "chat_scroller" to the size of screen
     $(window).resize(function() {
         $("#chat_scroller").height($("#nick_list").height()-1);
     });
-    
+
     var fn = function(obj) {
         c.setAutoScrollEnabled(false);
         if(obj.scrollTop() + obj.height() >= obj.prop("scrollHeight"))
@@ -446,7 +446,7 @@ $(document).ready(function(){
     $("#chat_scroller").on('scroll', function() {
         fn($(this));
     });
-    
+
     $("#btnTones").on('click', function() {
         //will not remember the status yet :), cookies, mmm
         c.setTonesEnables(!c.getTonesEnabled());
@@ -455,6 +455,10 @@ $(document).ready(function(){
         } else {
             $("#btnTones").text("Enable tones");
         }
-    })
-    
+    });
+
+    $("input#text_input.btn").nicknameTabComplete({
+        nicknames: nicks
+    });
+
 });
