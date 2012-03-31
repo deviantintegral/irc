@@ -199,6 +199,16 @@ a {
 	padding-top: 5px;
 	font-size: 15px;
 }
+#nick_list span.hints {
+	font-size: small;
+	display: block;
+	padding: 10px;
+	color: #CCC;
+}
+#nick_list span.hints .label {
+	font-weight: bold;
+	text-decoration: underline;
+}
 #chat_scroller {
     margin-top: 38px;
     overflow: auto;
