@@ -586,50 +586,5 @@ $(document).ready(function(){
         }
     });
 
-    $('#text_input').keydown( function(event) {
-        if (event.keyCode == 9) {
-            event.preventDefault();
-            if (prevKeyWasTab == false) {
-                prevKeyWasTab = true;
-                pattern = $('#text_input').val();
-                pattern = new RegExp("^"+pattern, "i");
-                sourcePos = 0;
-                candidate = incrementalSearch(pattern, source, sourcePos);
-                if (candidate.length > 0) {
-                    //candidate found
-                    $('#text_input').val(candidate);
-                    return;
-                }
-            } else {
-                candidate = incrementalSearch(pattern, source, sourcePos);
-                if (candidate.length > 0) {
-                    //candidate found
-                    $('#text_input').val(candidate);
-                    return;
-                }
-            }
-        } else {
-            prevKeyWasTab = false;
-            source = nicks; //we do not want the source to change during tabcompletion
-        }
-    });
-
-    var incrementalSearch = function(pattern, source, sp) {
-        result = "";
-        for (var i = sp; i < source.length; i++) {
-            var r = source[i].search(pattern);
-            sourcePos = (i+1 > source.length-1) ? 0 : i+1;
-            if (r == 0) {
-                return source[i];
-            }
-        }
-        for (var i = 0; i < sp; i++) {
-            var r = source[i].search(pattern);
-            sourcePos = i+1;
-            if (r == 0) {
-                return source[i];
-            }
-        }
-        return result;
-    };
+    $("#text_input").tabComplete(nicks);
 });
