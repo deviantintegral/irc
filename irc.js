@@ -1,5 +1,5 @@
 /***************************************\
-          IRC#nodester client
+          IRC#lullabuddies client
 \***************************************/
 
 /*
@@ -7,7 +7,7 @@
  * @mainteiner : Alejandro Morales <vamg008@gmail.com>
  * @licence    : GNU Affero
  * @updated    : 17-03-2012
- * @repo       : http://github.com/nodester/irc
+ * @repo       : http://github.com/Lullabot/irc
  * @version    : 2.0.0
  *
  * @note       : Currently there is no implementation for IRC commands.
