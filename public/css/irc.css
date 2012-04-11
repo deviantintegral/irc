@@ -156,6 +156,12 @@ a {
 .header img {
 	height:27px !important;
 }
+.header #channel {
+	margin-left: 25px;
+	vertical-align: middle;
+	height: 35px;
+	display: inline-block;
+}
 .spinner {
 	margin-left:135px;
 	top: 17px;
@@ -176,11 +182,11 @@ a {
 #nick_list {
 	bottom: 35px;
 	line-height: 1.15;
-    overflow: auto;
-    overflow-x: hidden;
+  overflow: auto;
+  overflow-x: hidden;
 	position: fixed;
 	right: 0;
-	top: 37px;
+	top: 47px;
 	width: 150px;
 	background-color: #858585;
 	border-left: 3px solid #bfddf0;
