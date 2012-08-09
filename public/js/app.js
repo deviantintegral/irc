@@ -406,10 +406,11 @@ $(document).ready(function(){
         $('#login-msg').text("");
         loginStatus.html("");
         var nick = window.nick = getNickname($('#nick').val());
+        var password = window.password = $('#password').val();
         $('#login-msg').text("Joining as " + nick + "...");
         $('#join').prop("disabled", "disabled");
         c.setIrcNoticesEnabled(false);
-        sock.send(JSON.stringify({ nickname: nick }));
+        sock.send(JSON.stringify({ nickname: nick, password: password }));
         //start spinner
         window.target = document.getElementById('join-form');
         window.spinner = new Spinner(c.getOpts()).spin(window.target);

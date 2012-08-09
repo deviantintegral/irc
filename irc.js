@@ -79,11 +79,13 @@ io.sockets.on('connection', function (client) {
   var socket = client;
   var irc = null;
   var nickname = null;
+  var password = null;
   client.on('message', function(data) {
     var obj = JSON.parse(data);
     if (obj.hasOwnProperty('nickname')) {
       if (irc === null) {
         nickname = obj.nickname;
+        password = obj.password;
         irc = new ircjs({
           server: 'irc.freenode.net',
           port: 6667,
@@ -105,7 +107,7 @@ io.sockets.on('connection', function (client) {
          * we issue a call to join.
          */
         irc.connect(function () {
-          irc.join(cfg.channel);
+          irc.join(cfg.channel, password);
         });
         
         /*
