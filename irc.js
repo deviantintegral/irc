@@ -1,5 +1,5 @@
 /***************************************\
-          IRC#lullabuddies client
+          IRC client
 \***************************************/
 
 /*
@@ -19,7 +19,7 @@ var http    = require('http')
   , io      = require('socket.io')
   , express = require('express')
   , ircjs   = require('irc-js')
-  , cfg     = { channel:'#lullabuddies' }
+  , cfg     = require('./config')
   , app     = express.createServer()
   , io      = require('socket.io').listen(app);
 
@@ -124,7 +124,7 @@ io.sockets.on('connection', function (client) {
             }));
           } else {
             irc.privmsg(message.person.nick,
-              "Automatic: I am using a web client. I can only talk on channel #lullabuddies.");
+              "Automatic: I am using a web client. I can only talk on channel " + cfg.channel + ".");
           }
         });
 
