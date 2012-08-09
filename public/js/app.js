@@ -398,6 +398,12 @@ $(document).ready(function(){
         }
     };
 
+    var handleChannel = function(data) {
+        var obj = JSON.parse(data);
+        window.channel = obj.channel;
+        $('#channel-name').html(window.channel + " channel");
+    };
+
     var handleConnect = function() {
         //cancel reconnect
         if (doNotReconnect == true) {
@@ -452,6 +458,12 @@ $(document).ready(function(){
 
     var requestWebUsers = function () {
         sock.send(JSON.stringify({ webusers: ""}))
+    };
+
+    var requestChannel = function() {
+        csock.emit('channel', JSON.stringify({
+            channel: ""
+        }));
     };
 
     chatForm.on('submit',function(e){
@@ -588,4 +600,9 @@ $(document).ready(function(){
     });
 
     $("#text_input").tabComplete(nicks);
+
+    var csock;
+    csock = io.connect('http://'+window.location.host);
+    csock.on('channel', handleChannel);
+    requestChannel();
 });

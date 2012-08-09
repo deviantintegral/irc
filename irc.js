@@ -75,11 +75,21 @@ app.listen(8080);
  * Sockets stuff
 */
 io.set('log level', 1); //reduce debug messages
+
 io.sockets.on('connection', function (client) {
   var socket = client;
   var irc = null;
   var nickname = null;
   var password = null;
+  client.on('channel', function(data) {
+    var obj = JSON.parse(data);
+    if (obj.hasOwnProperty('channel')) {
+      client.emit('channel', JSON.stringify({
+        channel: cfg.channel
+      }));
+    };
+  });
+
   client.on('message', function(data) {
     var obj = JSON.parse(data);
     if (obj.hasOwnProperty('nickname')) {
