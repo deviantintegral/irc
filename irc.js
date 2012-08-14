@@ -345,7 +345,17 @@ io.sockets.on('connection', function (client) {
        */
         switch (obj.messagetype) {
         case "message":
-          irc.privmsg(cfg.channel, (obj.message));
+          if (obj.message.indexOf("/nick ") === 0) {
+            nick = obj.message.substr(6);
+            irc.nick(nick);
+            client.send(JSON.stringify({
+              messagetype: "nick",
+              message: nick
+            }));
+          }
+          else {
+            irc.privmsg(cfg.channel, (obj.message));
+          }
           break;
         default:
           console.log(data);

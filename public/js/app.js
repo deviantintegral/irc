@@ -282,6 +282,13 @@ $(document).ready(function(){
         if (obj && obj.messagetype) {
             var isSelf = (obj.from == nickname) ? true : false;
             switch (obj.messagetype) {
+                case "nick":
+                    nicks.splice(nicks.indexOf("nickname"), 1);
+                    nickname = window.nick = obj.message;
+                    nicks.push(nickname);
+                    nicks.sort(cisort);
+                    nicksToList();
+                    break;
                 case "433":  //nick already in use
                     window.spinner.stop();
                     sock.disconnect();
