@@ -408,13 +408,14 @@ $(document).ready(function(){
                         nicks.sort(cisort);
                         nicksToList();
                     }
+
                     requestStatistics();
                     break;
                 case "quit":
                 case "part":
                     appendEvent(obj.from, obj.messagetype, isSelf);
                     for (var i = 0; i < nicks.length; i++) {
-                        if (nicks[i] == obj.from) {
+                        if (nicks[i] == obj.from || nicks[i] == "@" + obj.from) {
                             nicks.splice(i,1);
                             break;
                         }
