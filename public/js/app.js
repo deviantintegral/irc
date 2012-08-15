@@ -17,14 +17,6 @@ $(document).ready(function(){
     var doNotReconnect = false; //prohibit reconnect to freenode server after a socket disconnect, no retries
     var motdPrevLineEmpty = false; //flag for determining if the prev motd line was only spaces and asterisks
 
-    //used in tab completion
-    var prevKeyWasTab = false;
-    var pattern = ""; //text fragment respective pattern to look for
-    var candidate = ""; //candidate
-    var source = []; //array of values to be matched
-    var sourcePos = 0; //the search sartting position
-    //-
-
     window.counter = 0;
     $('#nick').focus();
 
