@@ -196,6 +196,19 @@ io.sockets.on('connection', function (client) {
           }));
         });
 
+        //on nickname already in use, 433
+        irc.addListener('433', function (message) {
+          client.send(JSON.stringify({
+            messagetype: "433",
+            //rejected nick
+            from: (message.params[1]),
+            //the irc server as channel
+            channel: message.server,
+            //the rejection message, usually "Nickname is already in use."
+            message: (message.params[2])
+          }));
+        });
+
         /*
          * Handler for parting the channel, while remaining connected to the irc server
          */
