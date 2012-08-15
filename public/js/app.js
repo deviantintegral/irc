@@ -347,33 +347,8 @@ $(document).ready(function(){
                         continue;
                       }
 
-                      var perNickAwayPoller = function(n) {
-                          // We return an anonymous function so that we can
-                          // keep the current nickname in scope, instead of
-                          // referencing the last nickname in the array.
-                          // @url http://stackoverflow.com/questions/6564814/passing-argument-to-settimeout-in-a-for-loop
-                          return function() {
-
-                            // Only check and continue to check if the user is
-                            // still part of this channel.
-                            if (nicks.indexOf(n) >= 0) {
-                              sock.send(JSON.stringify({
-                                  messagetype: "message",
-                                  message: "/whois " + n
-                              }));
-
-                              // To avoid flooding the server we space our
-                              // WHOIS queries by one second and check only
-                              // once per minute per nickname. Since we support
-                              // /whois from the client, the end user can always
-                              // force a referesh on a given nickname.
-                              setTimeout(perNickAwayPoller(n), i * 1000 + 60 * 1000);
-                            }
-                          }
-                      };
-
                       // Set the initial away check for all channel members.
-                      setTimeout(perNickAwayPoller(nick), (i + 1) * 1000);
+                      setTimeout(perNickAwayPoller(nick, i), (i + 1) * 1000);
                     }
 
                     break;
@@ -407,6 +382,8 @@ $(document).ready(function(){
                         nicks.push(obj.from);
                         nicks.sort(cisort);
                         nicksToList();
+                        // Query WHOIS right away.
+                        setTimeout(perNickAwayPoller(obj.from, 0), 1000);
                     }
 
                     requestStatistics();
@@ -526,6 +503,41 @@ $(document).ready(function(){
             message: textInput.val()
         }));
         textInput.val('');
+    };
+
+    /*
+     * setTimeout() callback to poll each username's WHOIS response to look for
+     * away statuses.
+     *
+     * @param n
+     *   The nickname to query.
+     * @param delay
+     *   The delay in seconds to add to the next WHOIS check, on top of the
+     *   default 60 second wait.
+     */
+    var perNickAwayPoller = function(n, delay) {
+        // We return an anonymous function so that we can
+        // keep the current nickname in scope, instead of
+        // referencing the last nickname in the array.
+        // @url http://stackoverflow.com/questions/6564814/passing-argument-to-settimeout-in-a-for-loop
+        return function() {
+
+          // Only check and continue to check if the user is
+          // still part of this channel.
+          if (nicks.indexOf(n) >= 0) {
+            sock.send(JSON.stringify({
+                messagetype: "message",
+                message: "/whois " + n
+            }));
+
+            // To avoid flooding the server we space our
+            // WHOIS queries by one second and check only
+            // once per minute per nickname. Since we support
+            // /whois from the client, the end user can always
+            // force a referesh on a given nickname.
+            setTimeout(perNickAwayPoller(n, delay), delay * 1000 + 60 * 1000);
+          }
+        }
     };
 
     /*
