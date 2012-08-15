@@ -17,14 +17,6 @@ $(document).ready(function(){
     var doNotReconnect = false; //prohibit reconnect to freenode server after a socket disconnect, no retries
     var motdPrevLineEmpty = false; //flag for determining if the prev motd line was only spaces and asterisks
 
-    //used in tab completion
-    var prevKeyWasTab = false;
-    var pattern = ""; //text fragment respective pattern to look for
-    var candidate = ""; //candidate
-    var source = []; //array of values to be matched
-    var sourcePos = 0; //the search sartting position
-    //-
-
     window.counter = 0;
     $('#nick').focus();
 
@@ -264,12 +256,12 @@ $(document).ready(function(){
         if (webNicks.length > 0) {
             for (var i = 0; i < nicks.length; i++) {
                 idx = webNicks.indexOf(nicks[i]);
-                (idx != -1) ? (content += '<li><p><span class="webnick">' + nicks[i] + '</span></p></li>') :
-                              (content += '<li>' + nicks[i] + '</li>');
+                (idx != -1) ? (content += '<li data-nick="' + nicks[i] + '"><p><span class="webnick">' + nicks[i] + '</span></p></li>') :
+                              (content += '<li data-nick="' + nicks[i] + '">' + nicks[i] + '</li>');
             }
         } else {
             for (var i = 0; i < nicks.length; i++) {
-                content += '<li>' + nicks[i] + '</li>';
+                content += '<li data-nick="' + nicks[i] + '">' + nicks[i] + '</li>';
             }
         }
         nick_ul.html(content);
@@ -282,6 +274,13 @@ $(document).ready(function(){
         if (obj && obj.messagetype) {
             var isSelf = (obj.from == nickname) ? true : false;
             switch (obj.messagetype) {
+                case "nick":
+                    nicks.splice(nicks.indexOf(nickname), 1);
+                    nickname = window.nick = obj.message;
+                    nicks.push(nickname);
+                    nicks.sort(cisort);
+                    nicksToList();
+                    break;
                 case "433":  //nick already in use
                     window.spinner.stop();
                     sock.disconnect();
@@ -329,6 +328,21 @@ $(document).ready(function(){
                 case "endnames":
                     nicks.sort(cisort);
                     nicksToList();
+                    for (var i = 0; i < nicks.length; i++) {
+                      nick = nicks[i];
+                      if (nick.charAt(0) == '@') {
+                        nick = nick.substring(1);
+                      }
+
+                      // Don't do away checking for ourselves.
+                      if (nick == nickname) {
+                        continue;
+                      }
+
+                      // Set the initial away check for all channel members.
+                      setTimeout(perNickAwayPoller(nick, i), (i + 1) * 1000);
+                    }
+
                     break;
                     /*
                      * motd is currently disabled
@@ -360,14 +374,17 @@ $(document).ready(function(){
                         nicks.push(obj.from);
                         nicks.sort(cisort);
                         nicksToList();
+                        // Query WHOIS right away.
+                        setTimeout(perNickAwayPoller(obj.from, 0), 1000);
                     }
+
                     requestStatistics();
                     break;
                 case "quit":
                 case "part":
                     appendEvent(obj.from, obj.messagetype, isSelf);
                     for (var i = 0; i < nicks.length; i++) {
-                        if (nicks[i] == obj.from) {
+                        if (nicks[i] == obj.from || nicks[i] == "@" + obj.from) {
                             nicks.splice(i,1);
                             break;
                         }
@@ -389,6 +406,64 @@ $(document).ready(function(){
                     webNicks = obj.wu;
                     nicksToList();
                     break;
+                case "away":
+                    $('ul#nick_ul li:not(".info")').each(function() {
+                      // Ignore operator prefixes.
+                      var nick = $(this).data('nick');
+                      if (nick.charAt(0) == '@') {
+                        nick = nick.substring(1);
+                      }
+                      if (nick == obj.nick) {
+                        $(this).css('font-style', 'italic');
+                        $(this).attr('title', obj.message);
+
+                        // Store the time this nickname's away status was last
+                        // updated. We need to do this due to the fact that
+                        // clearing an away status is not a push operation, but
+                        // a poll on WHOIS by the client with a missing 301
+                        // resposne.
+                        $(this).data('nick-time', Math.round(new Date().getTime() / 1000));
+                      }
+                    });
+                    break;
+                case "whois-info":
+                    $('ul#nick_ul li').each(function() {
+                      // Ignore operator prefixes.
+                      var nick = $(this).data('nick');
+                      if (typeof nick != 'undefined' && nick.charAt(0) == '@') {
+                        nick = nick.substring(1);
+                      }
+
+                      if (nick == obj.nick) {
+                        var contents = obj.info + "<br />" + obj.address;
+                        var $info = $(this).find('li.info');
+                        if ($info.length == 0) {
+                          $(this).append('<li class="info"></li>');
+                          $info = $(this).find('li.info');
+                        }
+                        $info.html(contents);
+                      }
+                    });
+                    break;
+                case "whois-end":
+                    $('ul#nick_ul li:not(".info")').each(function() {
+                      // Ignore operator prefixes.
+                      var nick = $(this).data('nick');
+                      var nick_time = $(this).data('nick-time');
+                      if (nick.charAt(0) == '@') {
+                        nick = nick.substring(1);
+                      }
+                      // Clear away statuses if it looks like we did a WHOIS
+                      // that didn't respond with an away status. We give
+                      // ourselves a nice long 10 seconds for the response
+                      // to a WHOIS to finish.
+                      if (nick == obj.nick && nick_time < (Math.round(new Date().getTime() / 1000) - 10)) {
+                        $(this).css('font-style', '');
+                        $(this).attr('title', '');
+                        $(this).data('nick-time', '');
+                      }
+                    });
+                    break;
                 default:
                     alert(data);
                     break;
@@ -406,10 +481,11 @@ $(document).ready(function(){
         $('#login-msg').text("");
         loginStatus.html("");
         var nick = window.nick = getNickname($('#nick').val());
+        var password = window.password = $('#password').val();
         $('#login-msg').text("Joining as " + nick + "...");
         $('#join').prop("disabled", "disabled");
         c.setIrcNoticesEnabled(false);
-        sock.send(JSON.stringify({ nickname: nick }));
+        sock.send(JSON.stringify({ nickname: nick, password: password }));
         //start spinner
         window.target = document.getElementById('join-form');
         window.spinner = new Spinner(c.getOpts()).spin(window.target);
@@ -441,6 +517,41 @@ $(document).ready(function(){
     };
 
     /*
+     * setTimeout() callback to poll each username's WHOIS response to look for
+     * away statuses.
+     *
+     * @param n
+     *   The nickname to query.
+     * @param delay
+     *   The delay in seconds to add to the next WHOIS check, on top of the
+     *   default 60 second wait.
+     */
+    var perNickAwayPoller = function(n, delay) {
+        // We return an anonymous function so that we can
+        // keep the current nickname in scope, instead of
+        // referencing the last nickname in the array.
+        // @url http://stackoverflow.com/questions/6564814/passing-argument-to-settimeout-in-a-for-loop
+        return function() {
+
+          // Only check and continue to check if the user is
+          // still part of this channel.
+          if (nicks.indexOf(n) >= 0) {
+            sock.send(JSON.stringify({
+                messagetype: "message",
+                message: "/whois " + n
+            }));
+
+            // To avoid flooding the server we space our
+            // WHOIS queries by one second and check only
+            // once per minute per nickname. Since we support
+            // /whois from the client, the end user can always
+            // force a referesh on a given nickname.
+            setTimeout(perNickAwayPoller(n, delay), delay * 1000 + 60 * 1000);
+          }
+        }
+    };
+
+    /*
      * requesting statistics is user action triggered
      * in case it is proven to be to resource intensive
      * another solution can be sought, e.g., on a timer
@@ -455,8 +566,31 @@ $(document).ready(function(){
 
     chatForm.on('submit',function(e){
   	e.preventDefault();
-        if (textInput.val() !== '') {
+        var message = textInput.val();
+        if (message !== '') {
             sendMessage();
+
+            // Update our away status if needed.
+            if (message.indexOf("/away") === 0) {
+              var away_message = message.substr(6);
+              $('ul#nick_ul li:not(".info")').each(function() {
+                // Ignore operator prefixes.
+                var nick = $(this).data('nick');
+                if (nick.charAt(0) == '@') {
+                  nick = nick.substring(1);
+                }
+                if (nick == nickname) {
+                  if (away_message == "") {
+                    $(this).css('font-style', '');
+                    $(this).attr('title', '');
+                  }
+                  else {
+                    $(this).css('font-style', 'italic');
+                    $(this).attr('title', away_message);
+                  }
+                }
+              });
+            }
         } else {
             alert('<p> You need to input a name</p>');
         }

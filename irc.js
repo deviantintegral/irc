@@ -1,5 +1,5 @@
 /***************************************\
-          IRC#lullabuddies client
+          IRC client
 \***************************************/
 
 /*
@@ -19,7 +19,7 @@ var http    = require('http')
   , io      = require('socket.io')
   , express = require('express')
   , ircjs   = require('irc-js')
-  , cfg     = { channel:'#lullabuddies' }
+  , cfg     = require('./config')
   , app     = express.createServer()
   , io      = require('socket.io').listen(app);
 
@@ -79,11 +79,14 @@ io.sockets.on('connection', function (client) {
   var socket = client;
   var irc = null;
   var nickname = null;
+  var password = null;
+
   client.on('message', function(data) {
     var obj = JSON.parse(data);
     if (obj.hasOwnProperty('nickname')) {
       if (irc === null) {
         nickname = obj.nickname;
+        password = obj.password;
         irc = new ircjs({
           server: 'irc.freenode.net',
           port: 6667,
@@ -105,7 +108,7 @@ io.sockets.on('connection', function (client) {
          * we issue a call to join.
          */
         irc.connect(function () {
-          irc.join(cfg.channel);
+          irc.join(cfg.channel, password);
         });
 
         /*
@@ -124,7 +127,7 @@ io.sockets.on('connection', function (client) {
             }));
           } else {
             irc.privmsg(message.person.nick,
-              "Automatic: I am using a web client. I can only talk on channel #lullabuddies.");
+              "Automatic: I am using a web client. I can only talk on channel " + cfg.channel + ".");
           }
         });
 
@@ -136,6 +139,42 @@ io.sockets.on('connection', function (client) {
             messagetype: "join",
             from: (message.person.nick),
             channel: (message.params[0])
+          }));
+        });
+
+        /*
+         * Handler for the away component of a WHOIS response.
+         */
+        irc.addListener('301', function(message) {
+          client.send(JSON.stringify({
+            messagetype: "away",
+            nick: message.params[1],
+            message: message.params[2]
+          }));
+        });
+
+        /*
+         * Handler for the user info component of a WHOIS response.
+         */
+        irc.addListener('311', function(raw) {
+          console.log(raw);
+          console.log(raw.params);
+          client.send(JSON.stringify({
+            messagetype: "whois-info",
+            nick: raw.params[1],
+            username: raw.params[2],
+            address: raw.params[3],
+            info: raw.params[5]
+          }));
+        });
+
+        /*
+         * Handler for the end of a WHOIS response.
+         */
+        irc.addListener('318', function(message) {
+          client.send(JSON.stringify({
+            messagetype: "whois-end",
+            nick: message.params[1],
           }));
         });
 
@@ -330,7 +369,30 @@ io.sockets.on('connection', function (client) {
        */
         switch (obj.messagetype) {
         case "message":
-          irc.privmsg(cfg.channel, (obj.message));
+          if (obj.message.indexOf("/nick ") === 0) {
+            nick = obj.message.substr(6);
+            irc.nick(nick);
+            client.send(JSON.stringify({
+              messagetype: "nick",
+              message: nick
+            }));
+          }
+          else if (obj.message.indexOf("/away") === 0) {
+            var away_message = obj.message.substr(6);
+            if (away_message == "") {
+              irc.raw("AWAY");
+            }
+            else {
+              irc.raw("AWAY :" + away_message);
+            }
+          }
+          else if (obj.message.indexOf("/whois ") === 0) {
+            nick = obj.message.substr(7);
+            irc.raw("WHOIS " + nick);
+          }
+          else {
+            irc.privmsg(cfg.channel, (obj.message));
+          }
           break;
         default:
           console.log(data);

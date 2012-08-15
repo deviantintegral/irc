@@ -123,7 +123,7 @@ a {
     color: #ffd720;
 }
 .box {
-	width:17em;
+	width:25em;
 	padding:50px 10px 30px 10px;
 	margin-bottom: 45px;
 	border-top: 1px solid #C9C9C9;
@@ -204,6 +204,14 @@ a {
 	padding-top: 5px;
 	font-size: 15px;
 }
+
+#nick_list li.info {
+  border-bottom: none;
+  font-size: 10px;
+  word-wrap: break-word;
+  margin-left: 5px;
+}
+
 #nick_list span.hints {
 	font-size: small;
 	display: block;

@@ -18,6 +18,8 @@ Currently this simply joins #lullabuddies but I have plans to list out some offi
 
     This will grab the neccessary modules for the package.
 
+2. Modify config.js to point to the IRC channel you want to join.
+
 2. From your terminal go into your checkout and run:
 
     $ node irc.js
