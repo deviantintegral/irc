@@ -283,7 +283,7 @@ $(document).ready(function(){
             var isSelf = (obj.from == nickname) ? true : false;
             switch (obj.messagetype) {
                 case "nick":
-                    nicks.splice(nicks.indexOf("nickname"), 1);
+                    nicks.splice(nicks.indexOf(nickname), 1);
                     nickname = window.nick = obj.message;
                     nicks.push(nickname);
                     nicks.sort(cisort);
