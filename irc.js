@@ -80,6 +80,7 @@ io.sockets.on('connection', function (client) {
   var irc = null;
   var nickname = null;
   var password = null;
+
   client.on('message', function(data) {
     var obj = JSON.parse(data);
     if (obj.hasOwnProperty('nickname')) {
@@ -141,6 +142,27 @@ io.sockets.on('connection', function (client) {
           }));
         });
         
+        /*
+         * Handler for the away component of a WHOIS response.
+         */
+        irc.addListener('301', function(message) {
+          client.send(JSON.stringify({
+            messagetype: "away",
+            nick: message.params[1],
+            message: message.params[2]
+          }));
+        });
+
+        /*
+         * Handler for the end of a WHOIS response.
+         */
+        irc.addListener('318', function(message) {
+          client.send(JSON.stringify({
+            messagetype: "whois-end",
+            nick: message.params[1],
+          }));
+        });
+
         /*
          * Handler for the topic, 332
          */
@@ -352,6 +374,10 @@ io.sockets.on('connection', function (client) {
               messagetype: "nick",
               message: nick
             }));
+          }
+          else if (obj.message.indexOf("/whois ") === 0) {
+            nick = obj.message.substr(7);
+            irc.raw("WHOIS " + nick);
           }
           else {
             irc.privmsg(cfg.channel, (obj.message));
