@@ -154,6 +154,21 @@ io.sockets.on('connection', function (client) {
         });
 
         /*
+         * Handler for the user info component of a WHOIS response.
+         */
+        irc.addListener('311', function(raw) {
+          console.log(raw);
+          console.log(raw.params);
+          client.send(JSON.stringify({
+            messagetype: "whois-info",
+            nick: raw.params[1],
+            username: raw.params[2],
+            address: raw.params[3],
+            info: raw.params[5]
+          }));
+        });
+
+        /*
          * Handler for the end of a WHOIS response.
          */
         irc.addListener('318', function(message) {

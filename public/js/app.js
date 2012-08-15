@@ -415,7 +415,7 @@ $(document).ready(function(){
                     nicksToList();
                     break;
                 case "away":
-                    $('ul#nick_ul li').each(function() {
+                    $('ul#nick_ul li:not(".info")').each(function() {
                       // Ignore operator prefixes.
                       var nick = $(this).data('nick');
                       if (nick.charAt(0) == '@') {
@@ -434,8 +434,27 @@ $(document).ready(function(){
                       }
                     });
                     break;
-                case "whois-end":
+                case "whois-info":
                     $('ul#nick_ul li').each(function() {
+                      // Ignore operator prefixes.
+                      var nick = $(this).data('nick');
+                      if (typeof nick != 'undefined' && nick.charAt(0) == '@') {
+                        nick = nick.substring(1);
+                      }
+
+                      if (nick == obj.nick) {
+                        var contents = obj.info + "<br />" + obj.address;
+                        var $info = $(this).find('li.info');
+                        if ($info.length == 0) {
+                          $(this).append('<li class="info"></li>');
+                          $info = $(this).find('li.info');
+                        }
+                        $info.html(contents);
+                      }
+                    });
+                    break;
+                case "whois-end":
+                    $('ul#nick_ul li:not(".info")').each(function() {
                       // Ignore operator prefixes.
                       var nick = $(this).data('nick');
                       var nick_time = $(this).data('nick-time');
