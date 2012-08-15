@@ -362,6 +362,15 @@ io.sockets.on('connection', function (client) {
               message: nick
             }));
           }
+          else if (obj.message.indexOf("/away") === 0) {
+            var away_message = obj.message.substr(6);
+            if (away_message == "") {
+              irc.raw("AWAY");
+            }
+            else {
+              irc.raw("AWAY :" + away_message);
+            }
+          }
           else if (obj.message.indexOf("/whois ") === 0) {
             nick = obj.message.substr(7);
             irc.raw("WHOIS " + nick);
