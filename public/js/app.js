@@ -574,8 +574,31 @@ $(document).ready(function(){
 
     chatForm.on('submit',function(e){
   	e.preventDefault();
-        if (textInput.val() !== '') {
+        var message = textInput.val();
+        if (message !== '') {
             sendMessage();
+
+            // Update our away status if needed.
+            if (message.indexOf("/away") === 0) {
+              var away_message = message.substr(6);
+              $('ul#nick_ul li:not(".info")').each(function() {
+                // Ignore operator prefixes.
+                var nick = $(this).data('nick');
+                if (nick.charAt(0) == '@') {
+                  nick = nick.substring(1);
+                }
+                if (nick == nickname) {
+                  if (away_message == "") {
+                    $(this).css('font-style', '');
+                    $(this).attr('title', '');
+                  }
+                  else {
+                    $(this).css('font-style', 'italic');
+                    $(this).attr('title', away_message);
+                  }
+                }
+              });
+            }
         } else {
             alert('<p> You need to input a name</p>');
         }
