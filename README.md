@@ -16,7 +16,7 @@ Currently this simply joins #lullabuddies but I have plans to list out some offi
 
     $ npm install
 
-    This will grab the neccessary modules for the package.
+    _This will grab the neccessary modules for the package._
 
 2. Modify config.js to point to the IRC channel you want to join.
 
@@ -24,8 +24,9 @@ Currently this simply joins #lullabuddies but I have plans to list out some offi
 
     $ node irc.js
 
-    This will simply tell you it's running.
+    _This will simply tell you it's running._
 
 3. Go to http://localhost:8080 in your browser.
 
-    You should see something like this: ![welcome](https://img.skitch.com/20120331-d57xgxfkrte1ksnprcdus12um9.jpg)
+    You should see something like this:
+    ![welcome](https://img.skitch.com/20120331-d57xgxfkrte1ksnprcdus12um9.jpg)

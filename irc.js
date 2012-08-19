@@ -10,9 +10,12 @@
  * @repo       : http://github.com/Lullabot/irc
  * @version    : 2.0.0
  *
- * @note       : Currently there is no implementation for IRC commands.
- *             : This choice is by design.
-*/
+ * @note       : Currently there is only simple implementation of the following
+ *             : IRC commands.
+ *             : - /nick
+ *             : - /away
+ *             : - /whois
+ */
 
 var http    = require('http')
   , fs      = require('fs')
@@ -79,6 +82,7 @@ io.sockets.on('connection', function (client) {
   var socket = client;
   var irc = null;
   var nickname = null;
+  var channel = null;
   var password = null;
 
   client.on('message', function(data) {
@@ -86,6 +90,7 @@ io.sockets.on('connection', function (client) {
     if (obj.hasOwnProperty('nickname')) {
       if (irc === null) {
         nickname = obj.nickname;
+        channel = obj.channel;
         password = obj.password;
         irc = new ircjs({
           server: 'irc.freenode.net',
@@ -108,7 +113,7 @@ io.sockets.on('connection', function (client) {
          * we issue a call to join.
          */
         irc.connect(function () {
-          irc.join(cfg.channel, password);
+          irc.join(channel, password);
         });
 
         /*
@@ -118,7 +123,7 @@ io.sockets.on('connection', function (client) {
          * explaining that there is no privacy!
          */
         irc.addListener('privmsg', function (message) {
-          if (message.params[0] == cfg.channel) {
+          if (message.params[0] == channel) {
             client.send(JSON.stringify({
               messagetype: "message",
               from: message.person.nick,
@@ -127,7 +132,7 @@ io.sockets.on('connection', function (client) {
             }));
           } else {
             irc.privmsg(message.person.nick,
-              "Automatic: I am using a web client. I can only talk on channel " + cfg.channel + ".");
+              "Automatic: I am using a web client. I can only talk on channel " + channel + ".");
           }
         });
 
@@ -391,7 +396,7 @@ io.sockets.on('connection', function (client) {
             irc.raw("WHOIS " + nick);
           }
           else {
-            irc.privmsg(cfg.channel, (obj.message));
+            irc.privmsg(channel, (obj.message));
           }
           break;
         default:

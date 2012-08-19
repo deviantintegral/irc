@@ -111,9 +111,12 @@ $(document).ready(function(){
                 sock.on('message', handleMessage);
                 sock.on('disconnect', handleDisconnect);
                 sock.on('connect', handleConnect);
-            };
+            }
         } else {
             $('#wrong').removeClass('off');
+        }
+        if ($('channel').val() !== '') {
+            // check the channel name against the allowed values
         }
     });
 
@@ -481,11 +484,12 @@ $(document).ready(function(){
         $('#login-msg').text("");
         loginStatus.html("");
         var nick = window.nick = getNickname($('#nick').val());
+        var channel = window.channel = $('#channel').val();
         var password = window.password = $('#password').val();
-        $('#login-msg').text("Joining as " + nick + "...");
+        $('#login-msg').text("Joining " + channel + " as " + nick + "...");
         $('#join').prop("disabled", "disabled");
         c.setIrcNoticesEnabled(false);
-        sock.send(JSON.stringify({ nickname: nick, password: password }));
+        sock.send(JSON.stringify({ nickname: nick, channel: channel, password: password }));
         //start spinner
         window.target = document.getElementById('join-form');
         window.spinner = new Spinner(c.getOpts()).spin(window.target);
