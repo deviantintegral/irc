@@ -16,14 +16,18 @@ body {
 
 	margin:0;
 }
-#lullabot { margin-left: auto;   margin-right: auto;  width: 8em; top: 30px;}
+#lullabot { margin-left: auto;   margin-right: auto; top: 30px;}
 #lullabot img {
 	padding: 3px;
 	margin:  0 auto;
+	height: 145px;
 }
 .lullabot {
 	margin-left: auto;   margin-right: auto;   width: 100%;top:30px;
 	text-align:center;
+}
+#footer {
+	text-align: center;
 }
 .btn.real {
 	background-image: -moz-linear-gradient(top, white, #E6E6E6);
