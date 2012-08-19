@@ -1,7 +1,7 @@
 #IRC Client in the browser
 This is a fork of the project from [Nodester](https://github.com/nodester/irc) and customized for [Lullabot](http://lullabot.com).
 
-Currently this simply joins #lullabuddies but I have plans to list out some official channels for clients that are password protected and allow them to input their channel password when they choose a password protected room.
+You can currently use this to join any channel on irc.freenode.net, however, so as to limit potential abuse, I'd like to implement a whitelist of channels in the config that can be joined. See https://github.com/Lullabot/irc/issues/6
 
 ##Installation
 
