@@ -29,4 +29,4 @@ You can currently use this to join any channel on irc.freenode.net, however, so 
 3. Go to http://localhost:8080 in your browser.
 
     You should see something like this:
-    ![welcome](https://img.skitch.com/20120331-d57xgxfkrte1ksnprcdus12um9.jpg)
+    ![welcome](https://img.skitch.com/20120819-rt7ypuwdiakted1hdk6d2fusw4.png)
