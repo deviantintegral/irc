@@ -104,7 +104,7 @@ io.sockets.on('connection', function (client) {
           },
           log: false
         });
-        
+
         console.log(irc)
 
         /*
@@ -115,7 +115,7 @@ io.sockets.on('connection', function (client) {
         irc.connect(function () {
           irc.join(channel, password);
         });
-        
+
         /*
          * Handler for private messages
          * There is no private messaging using the web client.
@@ -135,7 +135,7 @@ io.sockets.on('connection', function (client) {
               "Automatic: I am using a web client. I can only talk on channel " + channel + ".");
           }
         });
-        
+
         /*
          * Handler for join
          */
@@ -146,7 +146,7 @@ io.sockets.on('connection', function (client) {
             channel: (message.params[0])
           }));
         });
-        
+
         /*
          * Handler for the away component of a WHOIS response.
          */
@@ -197,7 +197,7 @@ io.sockets.on('connection', function (client) {
             message: (raw.params[2])
           }));
         });
-        
+
         /*
          * Handler for names.
          * There can be multiple such calls as the names are retrieved, 353
@@ -214,7 +214,7 @@ io.sockets.on('connection', function (client) {
             users: (raw.params[3].split(" "))
           }));
         });
-        
+
         /*
          * Handler for end of names list, 366
          */
@@ -291,7 +291,7 @@ io.sockets.on('connection', function (client) {
             from: (raw.server)
           }));
         });
-        
+
         /*
          * Handler for the welcome message
          * This indicates that the irc server accepted our request, and while there
@@ -311,7 +311,7 @@ io.sockets.on('connection', function (client) {
             message: (raw.params[1])
           }));
         });
-        
+
         /*
          * Handler for notices
          */
@@ -334,7 +334,7 @@ io.sockets.on('connection', function (client) {
             }));
           }
         });
-        
+
         /*
          * Handler for irc error 433: nick already in use.
          * We use this particular handler for the login screen
@@ -374,7 +374,7 @@ io.sockets.on('connection', function (client) {
          * e.g., timeout
          */
         irc.addListener('error', function () {
-          client.send(JSON.stringify({ 
+          client.send(JSON.stringify({
             messagetype: "error"
           }));
         });
