@@ -95,7 +95,7 @@ io.sockets.on('connection', function (client) {
             username: nickname,
             hostname: 'irc.nodester.com',
             servername: 'irc.freenode.net',
-            realname: nickname + ' via http://irc.nodester.com/'
+            realname: nickname + ' via http://chat.lullabot.com/'
           },
           log: false
         });
