@@ -14,7 +14,7 @@ $(document).ready(function(){
     var joinForm  = $('#join-form');
     var audio     = $('.notification audio').get(0);
     var loginStatus = $('#login-status-text');
-    var doNotReconnect = false; //prohibit reconnect to nodester server after a socket disconnect, no retries
+    var doNotReconnect = false; //prohibit reconnect to freenode server after a socket disconnect, no retries
     var motdPrevLineEmpty = false; //flag for determining if the prev motd line was only spaces and asterisks
 
     window.counter = 0;
@@ -193,11 +193,11 @@ $(document).ready(function(){
             message = motd;
             break;
         case "connected":
-            message = "<strong>Welcome to http://irc.nodester.com/</strong>";
+            message = "<strong>Welcome to http://chat.lullabot.com/</strong>";
             message = message.replace(/(https?:\/\/[-_.a-zA-Z0-9&?\/=\[\]()$!#+:]+)/g, "<a href=\"$1\" target=\"_BLANK\">$1</a>");
             break;
         case "disconnected":
-            message = "<strong>You've been disconnected from http://irc.nodester.com/<br />Cross your fingers and refresh your browser!</strong>";
+            message = "<strong>You've been disconnected from http://chat.lullabot.com/<br />Cross your fingers and refresh your browser!</strong>";
             message = message.replace(/(https?:\/\/[-_.a-zA-Z0-9&?\/=\[\]()$!#+:]+)/g, "<a href=\"$1\" target=\"_BLANK\">$1</a>");
             break;
         default:
@@ -362,7 +362,7 @@ $(document).ready(function(){
                     $('<meta/>', {content: nick, name: 'nick'}).appendTo($('head'));
                     $('#chat_wrapper').removeClass('off');
                     $('#text_input').focus();
-                    appendEvent("IRC #nodester", "connected", false);
+                    appendEvent("#lullabuddies", "connected", false);
                     $("#chat_scroller").height($("#nick_list").height()-1);
                     logBox.slideToggle();
                     $("#nickLabel").text(nickname);
