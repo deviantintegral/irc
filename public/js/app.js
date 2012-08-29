@@ -208,7 +208,7 @@ $(document).ready(function(){
         var stats_class = (c.getStatsEnabled() == true) ? 'line-stats' : 'line-stats off';
         var html =  '<th class="author">' + from + '</th>'
                   + '<td class="msg">' + message
-                  + '<span class="time">' + (new Date()).toTimeString().substr(0,9)+'</span>'; 
+                  + '<span class="time">' + (new Date()).toTimeString().substr(0,9)+'</span>';
         if (c.getRss() == "") {
             html += '</td>';
         } else {
@@ -300,8 +300,8 @@ $(document).ready(function(){
                     } else {
                         //redirect to login screen
                         var html = loginStatus.html();
-                        html += "<br />" + obj.message; 
-                        loginStatus.html(html); 
+                        html += "<br />" + obj.message;
+                        loginStatus.html(html);
                     }
                     break;
                 case "error":  //nick already in use
@@ -310,7 +310,7 @@ $(document).ready(function(){
                     $('#login-msg').addClass('off');
                     $('#wrong').text("");
                     $('#wrong').removeClass('off');
-                    $('#wrong').text("Oh well, try again!");   
+                    $('#wrong').text("Oh well, try again!");
                     $('#join').removeAttr("disabled");
                     return;
                 case "message":

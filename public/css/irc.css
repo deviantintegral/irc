@@ -16,13 +16,12 @@ body {
 
 	margin:0;
 }
-#rocket { margin-left: auto;   margin-right: auto;   width: 8em;top:30px;}
-#rocket img {
-	height:150px;
-	padding-top: 3px;
-	margin-left: -10px;
+#lullabot { margin-left: auto;   margin-right: auto;  width: 8em; top: 30px;}
+#lullabot img {
+	padding: 3px;
+	margin:  0 auto;
 }
-.rocket {
+.lullabot {
 	margin-left: auto;   margin-right: auto;   width: 100%;top:30px;
 	text-align:center;
 }
@@ -51,7 +50,7 @@ body {
 	font-size: 13px;
 	line-height: 18px;
 	color: #333;
-	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	text-shadow: none;
 	vertical-align: middle;
 	background-color: whiteSmoke;
 	background-repeat: repeat-x;
@@ -70,7 +69,7 @@ body {
 }
 a {
 	text-decoration:none;
-} 
+}
 .btn-info {
 	background-color: #49AFCD;
 	background-image: -moz-linear-gradient(top, #5BC0DE, #2F96B4);
@@ -87,7 +86,7 @@ a {
 	color: #fff;
 }
 .btn-settings {
-    margin-top: 3px;
+    margin-top: 5px;
     position: absolute;
 }
 .tones {
@@ -98,7 +97,7 @@ a {
 }
 
 #nickLabel {
-    margin-top: 7px;
+    margin-top: 11px;
     position: absolute;
     right: 270px;
     text-align: right;
@@ -130,7 +129,7 @@ a {
 	border-top: 1px solid #C9C9C9;
 	border-left: 1px solid #C9C9C9;
 	border-right: 1px solid #C9C9C9;
-	background-color: white;  
+	background-color: white;
 	-webkit-box-shadow: #AAA 0px 1px 5px;
 	box-shadow: 0px 1px 5px #AAA;
 	-moz-box-shadow: 0px 1px 5px #AAA;
@@ -140,8 +139,8 @@ a {
 	padding-top:2em;
 }
 .header {
-	background: white !important;
-	border-bottom: 1px solid #FFD720;
+	background: #f1f8fe !important;
+	border-bottom: 1px solid #bfddf0;
 	padding-left: 20px;
 	font-weight: bold;
 	width:100% !important;
@@ -156,6 +155,12 @@ a {
 }
 .header img {
 	height:27px !important;
+}
+.header #channel {
+	margin-left: 25px;
+	vertical-align: middle;
+	margin-top: -12px;
+	display: inline-block;
 }
 .spinner {
 	margin-left:135px;
@@ -177,14 +182,14 @@ a {
 #nick_list {
 	bottom: 35px;
 	line-height: 1.15;
-    overflow: auto;
-    overflow-x: hidden;
+  overflow: auto;
+  overflow-x: hidden;
 	position: fixed;
 	right: 0;
-	top: 37px;
+	top: 47px;
 	width: 150px;
-	background-color: #444;
-	border-left: 3px solid #FFD720;
+	background-color: #858585;
+	border-left: 3px solid #bfddf0;
 	box-shadow: -2px 0 #ccc;
 	color: white;
 	margin-bottom: 10px;
@@ -238,7 +243,7 @@ a {
 	width: 100px;
 }
 #chat_body .msg {
-	background: #ccc;
+	background: #f0f0f0;
 	height:22px;
 	padding: 2px 6px;
 }
@@ -246,7 +251,7 @@ a {
 	font-style: italic;
 }
 .me > .msg {
-	background: #444 !important;
+	background: #858585 !important;
 	color:#fff;
 }
 .me > .author{
@@ -290,6 +295,6 @@ a {
 	clear: both;
 	height: 2em;
 }
-.gold {background-color:#FFD700 !important;}
+.gold {background-color: #fc7f07 !important;}
 .me .time {color:#ccc !important;}
 .off {display: none;}
